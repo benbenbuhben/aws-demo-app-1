@@ -28,7 +28,7 @@ phases:
       - DB_PASSWORD=$(aws ssm get-parameter --name /ihme-demo-app/DB_PASSWORD --with-decryption --query 'Parameter.Value' --output text)
       - DB_NAME=$(aws ssm get-parameter --name /ihme-demo-app/DB_NAME --with-decryption --query 'Parameter.Value' --output text)
       - export DB_HOST DB_USER DB_PASSWORD DB_NAME
-      - echo Environment variables:
+      - echo Environment variables...
       - echo DB_HOST=$DB_HOST
       - echo DB_USER=$DB_USER
       - echo DB_PASSWORD=$DB_PASSWORD
