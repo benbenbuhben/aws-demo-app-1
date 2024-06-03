@@ -20,12 +20,19 @@ phases:
       - IMAGE_TAG=app1-${COMMIT_HASH:=latest}
       - echo Setting up kubeconfig...
       - aws eks update-kubeconfig --region us-east-1 --name ihme-demo-cluster --role-arn arn:aws:iam::992382508838:role/codebuild_service_role
+      - echo Displaying kubeconfig contents...
+      - cat ~/.kube/config
       - echo Retrieving parameters from Parameter Store...
       - DB_HOST=$(aws ssm get-parameter --name /ihme-demo-app/DB_HOST --with-decryption --query 'Parameter.Value' --output text)
       - DB_USER=$(aws ssm get-parameter --name /ihme-demo-app/DB_USER --with-decryption --query 'Parameter.Value' --output text)
       - DB_PASSWORD=$(aws ssm get-parameter --name /ihme-demo-app/DB_PASSWORD --with-decryption --query 'Parameter.Value' --output text)
       - DB_NAME=$(aws ssm get-parameter --name /ihme-demo-app/DB_NAME --with-decryption --query 'Parameter.Value' --output text)
       - export DB_HOST DB_USER DB_PASSWORD DB_NAME
+      - echo Environment variables:
+      - echo DB_HOST=$DB_HOST
+      - echo DB_USER=$DB_USER
+      - echo DB_PASSWORD=$DB_PASSWORD
+      - echo DB_NAME=$DB_NAME
   build:
     commands:
       - echo Build started on `date`
@@ -38,6 +45,9 @@ phases:
       - docker push $REPOSITORY_URI:app1-latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Applying deployment configuration...
+      - kubectl version
+      - kubectl config view
+      - kubectl get nodes
       - kubectl apply -f deployment.yml --validate=false
       - echo Updating Kubernetes deployment with new image...
       - kubectl set image deployment/demo-app-1 demo-app-1=$REPOSITORY_URI:$IMAGE_TAG --record
