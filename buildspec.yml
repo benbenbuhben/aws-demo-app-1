@@ -20,8 +20,10 @@ phases:
       - IMAGE_TAG=app1-${COMMIT_HASH:=latest}
       - echo Setting up kubeconfig...
       - aws eks update-kubeconfig --region us-east-1 --name ihme-demo-cluster --role-arn arn:aws:iam::992382508838:role/codebuild_service_role
+      - kubectl config use-context arn:aws:eks:us-east-1:992382508838:cluster/ihme-demo-cluster
       - echo Displaying kubeconfig contents...
       - cat ~/.kube/config
+      - export KUBECONFIG=/root/.kube/config
       - echo Retrieving parameters from Parameter Store...
       - DB_HOST=$(aws ssm get-parameter --name /ihme-demo-app/DB_HOST --with-decryption --query 'Parameter.Value' --output text)
       - DB_USER=$(aws ssm get-parameter --name /ihme-demo-app/DB_USER --with-decryption --query 'Parameter.Value' --output text)
