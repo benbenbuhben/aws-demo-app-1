@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: a9d55971f006b4852ae0cafe5b2c2a90-1080937707.us-east-1.elb.amazonaws.com
+      http:
+        paths:
+          - path: /demo-app-1
+            pathType: Prefix
+            backend:
+              service:
+                name: demo-app-1-service
+                port:
+                  number: 80
+          - path: /demo-app-2
+            pathType: Prefix
+            backend:
+              service:
+                name: demo-app-2-service
+                port:
+                  number: 80
