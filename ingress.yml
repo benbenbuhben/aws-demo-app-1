@@ -16,10 +16,3 @@ spec:
                 name: demo-app-1-service
                 port:
                   number: 80
-          - path: /demo-app-2
-            pathType: Prefix
-            backend:
-              service:
-                name: demo-app-2-service
-                port:
-                  number: 80

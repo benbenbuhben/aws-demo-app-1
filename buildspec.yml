@@ -56,6 +56,8 @@ phases:
       - kubectl config view
       - kubectl get nodes
       - kubectl apply -f deployment.yml --validate=false
+      - kubectl apply -f service.yml
+      - kubectl apply -f ingress.yml
       - echo Updating Kubernetes deployment with new image...
       - kubectl set image deployment/demo-app-1 demo-app-1=$REPOSITORY_URI:$IMAGE_TAG --record
       - echo Updating environment variables in Kubernetes deployment...
