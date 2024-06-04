@@ -28,6 +28,9 @@ phases:
       - DB_PASSWORD=$(aws ssm get-parameter --name /ihme-demo-app/DB_PASSWORD --with-decryption --query 'Parameter.Value' --output text)
       - DB_NAME=$(aws ssm get-parameter --name /ihme-demo-app/DB_NAME --with-decryption --query 'Parameter.Value' --output text)
       - export DB_HOST DB_USER DB_PASSWORD DB_NAME
+      - DOCKER_USERNAME=$(aws ssm get-parameter --name /ihme-demo-app/DOCKER_USERNAME --with-decryption --query 'Parameter.Value' --output text)
+      - DOCKER_PASSWORD=$(aws ssm get-parameter --name /ihme-demo-app/DOCKER_PASSWORD --with-decryption --query 'Parameter.Value' --output text)
+      - export DOCKER_USERNAME DOCKER_PASSWORD
   build:
     commands:
       - echo Build started on `date`
@@ -36,6 +39,8 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo Authenticating to Docker Hub...
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:app1-latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
